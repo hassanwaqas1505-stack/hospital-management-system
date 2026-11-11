@@ -7,6 +7,9 @@ import {
   Hospital,
   Eye,
   EyeOff,
+  ShieldCheck,
+  UserRound,
+  Stethoscope,
 } from 'lucide-react'
 
 import { useAuth } from './AuthContext'
@@ -19,6 +22,33 @@ function Login() {
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
+
+  const demoAccounts = [
+    {
+      role: 'Admin',
+      email: 'admin@medicare.com',
+      password: 'Admin@123',
+      icon: ShieldCheck,
+    },
+    {
+      role: 'Receptionist',
+      email: 'reception@medicare.com',
+      password: 'Reception@123',
+      icon: UserRound,
+    },
+    {
+      role: 'Doctor',
+      email: 'testdoctor@medicare.com',
+      password: 'Test@12345',
+      icon: Stethoscope,
+    },
+  ]
+
+  function handleDemoLogin(account) {
+    setEmail(account.email)
+    setPassword(account.password)
+    setError('')
+  }
 
   function handleSubmit(e) {
     e.preventDefault()
@@ -35,10 +65,11 @@ function Login() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-100 px-4">
-      <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-8 shadow-lg">
+    <div className="flex min-h-screen items-center justify-center bg-slate-100 px-4 py-8">
+      <div className="w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-6 shadow-lg sm:p-8">
 
-        <div className="mb-8 text-center">
+        {/* Header */}
+        <div className="mb-7 text-center">
           <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-600 text-white">
             <Hospital size={34} />
           </div>
@@ -52,6 +83,7 @@ function Login() {
           </p>
         </div>
 
+        {/* Login Form */}
         <form
           onSubmit={handleSubmit}
           className="space-y-5"
@@ -121,6 +153,48 @@ function Login() {
             Sign In
           </button>
         </form>
+
+        {/* Demo Credentials */}
+        <div className="mt-7 border-t border-slate-200 pt-6">
+          <div className="mb-4 text-center">
+            <h2 className="text-base font-bold text-slate-800">
+              Demo Credentials
+            </h2>
+
+            <p className="mt-1 text-xs text-slate-500">
+              Select a role to automatically fill login details
+            </p>
+          </div>
+
+          <div className="grid grid-cols-3 gap-2">
+            {demoAccounts.map((account) => {
+              const Icon = account.icon
+
+              return (
+                <button
+                  key={account.role}
+                  type="button"
+                  onClick={() => handleDemoLogin(account)}
+                  className="flex flex-col items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 p-3 text-slate-700 transition hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700"
+                >
+                  <Icon size={22} />
+
+                  <span className="text-xs font-semibold">
+                    {account.role}
+                  </span>
+
+                  <span className="text-[10px] font-medium text-blue-600">
+                    Use Account
+                  </span>
+                </button>
+              )
+            })}
+          </div>
+
+          <p className="mt-3 text-center text-xs text-slate-400">
+            Click a role above, then press Sign In.
+          </p>
+        </div>
 
         <p className="mt-6 text-center text-xs text-slate-400">
           Hospital Management System

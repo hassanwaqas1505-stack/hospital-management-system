@@ -1,0 +1,48 @@
+const patients = [
+  {
+    id: 1,
+    name: 'Ali Ahmed',
+    age: 28,
+    gender: 'Male',
+    phone: '03001234567',
+    email: 'ali@example.com',
+    bloodGroup: 'A+',
+    address: 'Lahore, Pakistan',
+    status: 'Active',
+  },
+  {
+    id: 2,
+    name: 'Fatima Khan',
+    age: 35,
+    gender: 'Female',
+    phone: '03111234567',
+    email: 'fatima@example.com',
+    bloodGroup: 'B+',
+    address: 'Karachi, Pakistan',
+    status: 'Active',
+  },
+  {
+    id: 3,
+    name: 'Usman Malik',
+    age: 42,
+    gender: 'Male',
+    phone: '03221234567',
+    email: 'usman@example.com',
+    bloodGroup: 'O+',
+    address: 'Islamabad, Pakistan',
+    status: 'Inactive',
+  },
+  {
+    id: 4,
+    name: 'Ayesha Noor',
+    age: 24,
+    gender: 'Female',
+    phone: '03331234567',
+    email: 'ayesha@example.com',
+    bloodGroup: 'AB+',
+    address: 'Lahore, Pakistan',
+    status: 'Active',
+  },
+]
+
+export default patients

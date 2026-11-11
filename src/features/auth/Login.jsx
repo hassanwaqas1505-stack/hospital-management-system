@@ -36,12 +36,6 @@ function Login() {
       password: 'Reception@123',
       icon: UserRound,
     },
-    {
-      role: 'Doctor',
-      email: 'testdoctor@medicare.com',
-      password: 'Test@12345',
-      icon: Stethoscope,
-    },
   ]
 
   function handleDemoLogin(account) {
@@ -102,7 +96,7 @@ function Login() {
                 name="login-email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email"
+                placeholder="Enter your registered email"
                 className="w-full p-3 outline-none"
                 autoComplete="off"
                 required
@@ -154,11 +148,11 @@ function Login() {
           </button>
         </form>
 
-        {/* Demo Credentials */}
+        {/* Demo Accounts */}
         <div className="mt-7 border-t border-slate-200 pt-6">
           <div className="mb-4 text-center">
             <h2 className="text-base font-bold text-slate-800">
-              Demo Credentials
+              Demo Accounts
             </h2>
 
             <p className="mt-1 text-xs text-slate-500">
@@ -166,7 +160,7 @@ function Login() {
             </p>
           </div>
 
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-2 gap-3">
             {demoAccounts.map((account) => {
               const Icon = account.icon
 
@@ -175,24 +169,37 @@ function Login() {
                   key={account.role}
                   type="button"
                   onClick={() => handleDemoLogin(account)}
-                  className="flex flex-col items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 p-3 text-slate-700 transition hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700"
+                  className="flex flex-col items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 p-4 text-slate-700 transition hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700"
                 >
-                  <Icon size={22} />
+                  <Icon size={23} />
 
-                  <span className="text-xs font-semibold">
+                  <span className="text-sm font-semibold">
                     {account.role}
                   </span>
 
-                  <span className="text-[10px] font-medium text-blue-600">
+                  <span className="text-xs font-medium text-blue-600">
                     Use Account
                   </span>
                 </button>
               )
             })}
           </div>
+        </div>
 
-          <p className="mt-3 text-center text-xs text-slate-400">
-            Click a role above, then press Sign In.
+        {/* Doctor Login Information */}
+        <div className="mt-5 rounded-xl border border-blue-100 bg-blue-50 p-4">
+          <div className="flex items-center gap-2 text-blue-800">
+            <Stethoscope size={20} />
+
+            <h3 className="text-sm font-bold">
+              Doctor Login
+            </h3>
+          </div>
+
+          <p className="mt-2 text-xs leading-5 text-slate-600">
+            Doctors can sign in using their own registered email
+            and password provided by the hospital administrator.
+            Enter your credentials in the fields above.
           </p>
         </div>
 

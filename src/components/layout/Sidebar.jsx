@@ -49,12 +49,7 @@ const navItems = [
   },
 ]
 
-function Sidebar({
-  darkMode,
-  setDarkMode,
-  isOpen,
-  onClose,
-}) {
+function Sidebar({ darkMode, setDarkMode, isOpen, onClose }) {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
 
@@ -81,7 +76,7 @@ function Sidebar({
       <aside
         className={`
           fixed inset-y-0 left-0 z-50
-          flex min-h-screen w-64 flex-col
+          flex h-dvh w-64 flex-col overflow-y-auto
           bg-slate-900 p-5 text-white
           transition-transform duration-300
           md:sticky md:top-0 md:z-30 md:translate-x-0
@@ -93,7 +88,7 @@ function Sidebar({
         `}
       >
         {/* Logo */}
-        <div className="mb-10 flex items-center justify-between">
+        <div className="mb-6 flex shrink-0 items-center justify-between">
           <div className="flex items-center gap-3">
             <Hospital size={30} className="text-cyan-400" />
             <h1 className="text-xl font-bold">MediCare</h1>
@@ -110,7 +105,7 @@ function Sidebar({
         </div>
 
         {/* Navigation */}
-        <p className="mb-4 text-xs uppercase tracking-wider text-slate-400">
+        <p className="mb-3 shrink-0 text-xs uppercase tracking-wider text-slate-400">
           Main Menu
         </p>
 
@@ -139,7 +134,7 @@ function Sidebar({
         </nav>
 
         {/* User Information */}
-        <div className="mb-4 border-t border-slate-700 pt-4">
+        <div className="mb-3 mt-5 shrink-0 border-t border-slate-700 pt-3">
           <p className="truncate text-sm font-medium text-white">
             {user?.name}
           </p>
@@ -158,20 +153,17 @@ function Sidebar({
           type="button"
           onClick={() => setDarkMode((prev) => !prev)}
           aria-label="Toggle theme"
-          className="mb-2 flex w-full cursor-pointer items-center gap-3 rounded-lg px-4 py-3 text-slate-300 transition hover:bg-slate-800 hover:text-cyan-400"
+          className="mb-2 flex w-full shrink-0 items-center gap-3 rounded-lg px-4 py-3 text-slate-300 transition hover:bg-slate-800 hover:text-cyan-400"
         >
           {darkMode ? <Sun size={20} /> : <Moon size={20} />}
-
-          <span>
-            {darkMode ? 'Light Mode' : 'Dark Mode'}
-          </span>
+          <span>{darkMode ? 'Light Mode' : 'Dark Mode'}</span>
         </button>
 
         {/* Logout */}
         <button
           type="button"
           onClick={handleLogout}
-          className="flex w-full cursor-pointer items-center gap-3 rounded-lg px-4 py-3 text-red-400 transition hover:bg-red-500/10 hover:text-red-300"
+          className="flex w-full shrink-0 items-center gap-3 rounded-lg px-4 py-3 text-red-400 transition hover:bg-red-500/10 hover:text-red-300"
         >
           <LogOut size={20} />
           <span>Logout</span>

@@ -15,6 +15,12 @@ import billsData from '../../data/bills'
 import useLocalStorage from '../../hooks/useLocalStorage'
 import { useAuth } from '../auth/AuthContext'
 
+const inputClasses =
+  'w-full min-w-0 rounded-lg border border-slate-300 bg-white p-3 text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-cyan-500 dark:border-slate-600 dark:bg-[#0f1b2d] dark:text-slate-100 dark:placeholder:text-slate-500'
+
+const modalClasses =
+  'rounded-xl border border-slate-200 bg-white p-4 shadow-xl dark:border-slate-700 dark:bg-[#172235] sm:p-6'
+
 function Billing() {
   const { user } = useAuth()
   const isAdmin = user?.role === 'Admin'
@@ -201,14 +207,15 @@ function Billing() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="w-full min-w-0 space-y-5 transition-colors duration-300 sm:space-y-6">
       {/* Page Header */}
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-slate-800">
+      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+        <div className="min-w-0">
+          <h1 className="text-2xl font-bold text-slate-800 dark:text-white sm:text-3xl">
             Billing
           </h1>
-          <p className="mt-1 text-slate-500">
+
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400 sm:text-base">
             {isAdmin
               ? 'Manage hospital invoices and payments'
               : 'Create invoices and manage patient payments'}
@@ -216,11 +223,12 @@ function Billing() {
         </div>
 
         <button
+          type="button"
           onClick={() => {
             resetForm()
             setShowForm(true)
           }}
-          className="flex items-center gap-2 rounded-lg bg-cyan-600 px-4 py-3 font-medium text-white hover:bg-cyan-700"
+          className="flex w-full shrink-0 cursor-pointer items-center justify-center gap-2 rounded-lg bg-cyan-600 px-4 py-3 font-medium text-white transition hover:bg-cyan-700 sm:w-auto"
         >
           <Plus size={20} />
           Create Invoice
@@ -229,46 +237,58 @@ function Billing() {
 
       {/* Summary Cards */}
       <div
-        className={`grid grid-cols-1 gap-5 sm:grid-cols-2 ${
+        className={`grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-5 ${
           isAdmin ? 'xl:grid-cols-4' : 'xl:grid-cols-3'
         }`}
       >
-        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-          <p className="text-sm text-slate-500">Total Invoices</p>
-          <h2 className="mt-2 text-2xl font-bold text-slate-800">
+        <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-colors dark:border-slate-700 dark:bg-[#172235] dark:shadow-none sm:p-5">
+          <p className="text-sm text-slate-500 dark:text-slate-400">
+            Total Invoices
+          </p>
+
+          <h2 className="mt-2 text-2xl font-bold text-slate-800 dark:text-white">
             {bills.length}
           </h2>
         </div>
 
         {isAdmin && (
-          <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-            <p className="text-sm text-slate-500">Total Revenue</p>
-            <h2 className="mt-2 text-2xl font-bold text-green-600">
+          <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-colors dark:border-slate-700 dark:bg-[#172235] dark:shadow-none sm:p-5">
+            <p className="text-sm text-slate-500 dark:text-slate-400">
+              Total Revenue
+            </p>
+
+            <h2 className="mt-2 break-words text-xl font-bold text-green-600 dark:text-green-400 sm:text-2xl">
               Rs. {totalRevenue.toLocaleString()}
             </h2>
           </div>
         )}
 
-        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-          <p className="text-sm text-slate-500">Paid Invoices</p>
-          <h2 className="mt-2 text-2xl font-bold text-green-600">
+        <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-colors dark:border-slate-700 dark:bg-[#172235] dark:shadow-none sm:p-5">
+          <p className="text-sm text-slate-500 dark:text-slate-400">
+            Paid Invoices
+          </p>
+
+          <h2 className="mt-2 text-2xl font-bold text-green-600 dark:text-green-400">
             {paidInvoices}
           </h2>
         </div>
 
-        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-          <p className="text-sm text-slate-500">Unpaid Invoices</p>
-          <h2 className="mt-2 text-2xl font-bold text-red-500">
+        <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-colors dark:border-slate-700 dark:bg-[#172235] dark:shadow-none sm:p-5">
+          <p className="text-sm text-slate-500 dark:text-slate-400">
+            Unpaid Invoices
+          </p>
+
+          <h2 className="mt-2 text-2xl font-bold text-red-500 dark:text-red-400">
             {unpaidInvoices}
           </h2>
         </div>
       </div>
 
       {/* Invoice Table */}
-      <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-        <div className="relative mb-5 max-w-sm">
+      <div className="w-full min-w-0 rounded-xl border border-slate-200 bg-white p-3 shadow-sm transition-colors dark:border-slate-700 dark:bg-[#172235] dark:shadow-none sm:p-5">
+        <div className="relative mb-5 w-full min-w-0 sm:max-w-sm">
           <Search
-            className="absolute left-3 top-3 text-slate-400"
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
             size={19}
           />
 
@@ -277,45 +297,53 @@ function Billing() {
             placeholder="Search patient or invoice..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full rounded-lg border border-slate-300 py-2.5 pl-10 pr-4 outline-none focus:border-cyan-500"
+            className={`${inputClasses} py-2.5 pl-10 pr-4`}
           />
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[850px] text-left">
+        <div className="w-full overflow-x-auto">
+          <table className="w-full min-w-[750px] text-left">
             <thead>
-              <tr className="border-b bg-slate-50 text-sm text-slate-600">
-                <th className="p-4">Invoice</th>
-                <th className="p-4">Patient</th>
-                <th className="p-4">Date</th>
-                <th className="p-4">Amount</th>
-                <th className="p-4">Status</th>
-                <th className="p-4">Actions</th>
+              <tr className="border-b border-slate-200 bg-slate-50 text-sm text-slate-600 dark:border-slate-700 dark:bg-[#1d2b40] dark:text-slate-300">
+                <th className="p-3 sm:p-4">Invoice</th>
+                <th className="p-3 sm:p-4">Patient</th>
+                <th className="p-3 sm:p-4">Date</th>
+                <th className="p-3 sm:p-4">Amount</th>
+                <th className="p-3 sm:p-4">Status</th>
+                <th className="p-3 sm:p-4">Actions</th>
               </tr>
             </thead>
 
-            <tbody>
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
               {filteredBills.map((bill) => (
-                <tr key={bill.id} className="border-b text-sm">
-                  <td className="p-4 font-medium text-slate-800">
+                <tr
+                  key={bill.id}
+                  className="text-sm transition hover:bg-slate-50 dark:hover:bg-[#1d2b40]"
+                >
+                  <td className="p-3 font-medium text-slate-800 dark:text-slate-100 sm:p-4">
                     {bill.invoiceNumber}
                   </td>
 
-                  <td className="p-4">{bill.patientName}</td>
+                  <td className="p-3 text-slate-600 dark:text-slate-300 sm:p-4">
+                    {bill.patientName}
+                  </td>
 
-                  <td className="p-4">{bill.date}</td>
+                  <td className="p-3 text-slate-600 dark:text-slate-300 sm:p-4">
+                    {bill.date}
+                  </td>
 
-                  <td className="p-4 font-medium">
+                  <td className="p-3 font-medium text-slate-700 dark:text-slate-200 sm:p-4">
                     Rs. {Number(bill.amount).toLocaleString()}
                   </td>
 
-                  <td className="p-4">
+                  <td className="p-3 sm:p-4">
                     <button
+                      type="button"
                       onClick={() => handleToggleStatus(bill)}
-                      className={`rounded-full px-3 py-1 text-xs font-medium ${
+                      className={`cursor-pointer whitespace-nowrap rounded-full px-3 py-1 text-xs font-medium transition ${
                         bill.status === 'Paid'
-                          ? 'bg-green-100 text-green-700'
-                          : 'bg-red-100 text-red-700'
+                          ? 'bg-green-100 text-green-700 hover:bg-green-200 dark:bg-green-500/15 dark:text-green-400 dark:hover:bg-green-500/25'
+                          : 'bg-red-100 text-red-700 hover:bg-red-200 dark:bg-red-500/15 dark:text-red-400 dark:hover:bg-red-500/25'
                       }`}
                       title="Update payment status"
                     >
@@ -323,11 +351,12 @@ function Billing() {
                     </button>
                   </td>
 
-                  <td className="p-4">
+                  <td className="p-3 sm:p-4">
                     <div className="flex items-center gap-3">
                       <button
+                        type="button"
                         onClick={() => setViewingBill(bill)}
-                        className="text-blue-600 hover:text-blue-800"
+                        className="cursor-pointer text-blue-600 transition hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
                         title="View"
                       >
                         <Eye size={18} />
@@ -336,16 +365,18 @@ function Billing() {
                       {isAdmin && (
                         <>
                           <button
+                            type="button"
                             onClick={() => handleEdit(bill)}
-                            className="text-green-600 hover:text-green-800"
+                            className="cursor-pointer text-green-600 transition hover:text-green-800 dark:text-green-400 dark:hover:text-green-300"
                             title="Edit"
                           >
                             <Pencil size={18} />
                           </button>
 
                           <button
+                            type="button"
                             onClick={() => handleDelete(bill.id)}
-                            className="text-red-600 hover:text-red-800"
+                            className="cursor-pointer text-red-600 transition hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
                             title="Delete"
                           >
                             <Trash2 size={18} />
@@ -354,8 +385,9 @@ function Billing() {
                       )}
 
                       <button
+                        type="button"
                         onClick={() => handlePrint(bill)}
-                        className="text-slate-600 hover:text-slate-900"
+                        className="cursor-pointer text-slate-600 transition hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
                         title="Print"
                       >
                         <Printer size={18} />
@@ -369,7 +401,7 @@ function Billing() {
                 <tr>
                   <td
                     colSpan="6"
-                    className="p-6 text-center text-slate-500"
+                    className="p-6 text-center text-slate-500 dark:text-slate-400"
                   >
                     No invoices found.
                   </td>
@@ -382,67 +414,75 @@ function Billing() {
 
       {/* Create / Edit Invoice Modal */}
       {showForm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/50 p-4">
-          <div className="my-8 w-full max-w-xl rounded-xl bg-white p-6 shadow-xl">
-            <div className="mb-5 flex items-center justify-between">
-              <h2 className="text-xl font-bold text-slate-800">
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/60 p-3 backdrop-blur-sm sm:p-4">
+          <div className={`my-auto max-h-[94dvh] w-full max-w-xl overflow-y-auto ${modalClasses}`}>
+            <div className="mb-5 flex items-center justify-between gap-3">
+              <h2 className="text-lg font-bold text-slate-800 dark:text-white sm:text-xl">
                 {editingBill ? 'Edit Invoice' : 'Create Invoice'}
               </h2>
 
-              <button onClick={resetForm}>
+              <button
+                type="button"
+                onClick={resetForm}
+                className="shrink-0 cursor-pointer rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700"
+              >
                 <X size={22} />
               </button>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="mb-1 block text-sm font-medium">
+                <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">
                   Patient Name
                 </label>
+
                 <input
                   required
                   name="patientName"
                   value={formData.patientName}
                   onChange={handleChange}
                   placeholder="Enter patient name"
-                  className="w-full rounded-lg border border-slate-300 p-3 outline-none focus:border-cyan-500"
+                  className={inputClasses}
                 />
               </div>
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="mb-1 block text-sm font-medium">
+                  <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">
                     Invoice Number
                   </label>
+
                   <input
                     required
                     name="invoiceNumber"
                     value={formData.invoiceNumber}
                     onChange={handleChange}
                     placeholder="INV-005"
-                    className="w-full rounded-lg border border-slate-300 p-3 outline-none focus:border-cyan-500"
+                    className={inputClasses}
                   />
                 </div>
 
                 <div>
-                  <label className="mb-1 block text-sm font-medium">
+                  <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">
                     Invoice Date
                   </label>
+
                   <input
                     required
                     type="date"
                     name="date"
                     value={formData.date}
                     onChange={handleChange}
-                    className="w-full rounded-lg border border-slate-300 p-3 outline-none focus:border-cyan-500"
+                    className={inputClasses}
                   />
                 </div>
               </div>
 
               <div>
-                <label className="mb-1 block text-sm font-medium">
+                <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">
                   Amount (PKR)
                 </label>
+
                 <input
                   required
                   type="number"
@@ -451,51 +491,53 @@ function Billing() {
                   value={formData.amount}
                   onChange={handleChange}
                   placeholder="Enter amount"
-                  className="w-full rounded-lg border border-slate-300 p-3 outline-none focus:border-cyan-500"
+                  className={inputClasses}
                 />
               </div>
 
               <div>
-                <label className="mb-1 block text-sm font-medium">
+                <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">
                   Description
                 </label>
+
                 <input
                   required
                   name="description"
                   value={formData.description}
                   onChange={handleChange}
                   placeholder="Enter service description"
-                  className="w-full rounded-lg border border-slate-300 p-3 outline-none focus:border-cyan-500"
+                  className={inputClasses}
                 />
               </div>
 
               <div>
-                <label className="mb-1 block text-sm font-medium">
+                <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">
                   Payment Status
                 </label>
+
                 <select
                   name="status"
                   value={formData.status}
                   onChange={handleChange}
-                  className="w-full rounded-lg border border-slate-300 p-3 outline-none focus:border-cyan-500"
+                  className={inputClasses}
                 >
                   <option value="Paid">Paid</option>
                   <option value="Unpaid">Unpaid</option>
                 </select>
               </div>
 
-              <div className="flex justify-end gap-3 pt-3">
+              <div className="flex flex-col-reverse gap-3 pt-3 sm:flex-row sm:justify-end">
                 <button
                   type="button"
                   onClick={resetForm}
-                  className="rounded-lg border border-slate-300 px-5 py-2.5"
+                  className="w-full cursor-pointer rounded-lg border border-slate-300 px-5 py-3 text-slate-600 transition hover:bg-slate-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700 sm:w-auto"
                 >
                   Cancel
                 </button>
 
                 <button
                   type="submit"
-                  className="rounded-lg bg-cyan-600 px-5 py-2.5 font-medium text-white hover:bg-cyan-700"
+                  className="w-full cursor-pointer rounded-lg bg-cyan-600 px-5 py-3 font-medium text-white transition hover:bg-cyan-700 sm:w-auto"
                 >
                   {editingBill ? 'Update Invoice' : 'Save Invoice'}
                 </button>
@@ -507,39 +549,65 @@ function Billing() {
 
       {/* View Invoice Modal */}
       {viewingBill && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
-            <div className="mb-5 flex items-center justify-between">
-              <h2 className="text-xl font-bold text-slate-800">
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/60 p-3 backdrop-blur-sm sm:p-4">
+          <div className={`my-auto w-full max-w-md ${modalClasses}`}>
+            <div className="mb-5 flex items-center justify-between gap-3">
+              <h2 className="text-lg font-bold text-slate-800 dark:text-white sm:text-xl">
                 Invoice Details
               </h2>
 
-              <button onClick={() => setViewingBill(null)}>
+              <button
+                type="button"
+                onClick={() => setViewingBill(null)}
+                className="shrink-0 cursor-pointer rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700"
+              >
                 <X size={22} />
               </button>
             </div>
 
-            <div className="space-y-4 text-sm">
-              <p><strong>Invoice:</strong> {viewingBill.invoiceNumber}</p>
-              <p><strong>Patient:</strong> {viewingBill.patientName}</p>
-              <p><strong>Date:</strong> {viewingBill.date}</p>
-              <p><strong>Description:</strong> {viewingBill.description}</p>
+            <div className="space-y-4 break-words text-sm text-slate-700 dark:text-slate-300">
               <p>
-                <strong>Amount:</strong> Rs.{' '}
-                {Number(viewingBill.amount).toLocaleString()}
+                <strong className="text-slate-800 dark:text-slate-100">Invoice:</strong>{' '}
+                {viewingBill.invoiceNumber}
               </p>
-              <p className="flex items-center gap-2">
-                <strong>Status:</strong>
+
+              <p>
+                <strong className="text-slate-800 dark:text-slate-100">Patient:</strong>{' '}
+                {viewingBill.patientName}
+              </p>
+
+              <p>
+                <strong className="text-slate-800 dark:text-slate-100">Date:</strong>{' '}
+                {viewingBill.date}
+              </p>
+
+              <p>
+                <strong className="text-slate-800 dark:text-slate-100">Description:</strong>{' '}
+                {viewingBill.description}
+              </p>
+
+              <p>
+                <strong className="text-slate-800 dark:text-slate-100">Amount:</strong>{' '}
+                Rs. {Number(viewingBill.amount).toLocaleString()}
+              </p>
+
+              <p className="flex flex-wrap items-center gap-2">
+                <strong className="text-slate-800 dark:text-slate-100">Status:</strong>
                 {viewingBill.status}
+
                 {viewingBill.status === 'Paid' && (
-                  <CheckCircle size={17} className="text-green-600" />
+                  <CheckCircle
+                    size={17}
+                    className="text-green-600 dark:text-green-400"
+                  />
                 )}
               </p>
             </div>
 
             <button
+              type="button"
               onClick={() => handlePrint(viewingBill)}
-              className="mt-6 flex w-full items-center justify-center gap-2 rounded-lg bg-cyan-600 py-3 text-white hover:bg-cyan-700"
+              className="mt-6 flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-cyan-600 py-3 text-white transition hover:bg-cyan-700"
             >
               <Printer size={18} />
               Print Invoice

@@ -1,4 +1,3 @@
-
 import { useState } from 'react'
 import {
   Search,
@@ -12,6 +11,9 @@ import {
 import doctorsData from '../../data/doctors'
 import useLocalStorage from '../../hooks/useLocalStorage'
 import { useAuth } from '../auth/AuthContext'
+
+const inputClasses =
+  'w-full min-w-0 rounded-lg border border-slate-200 bg-white p-3 text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-cyan-500 dark:border-slate-600 dark:bg-[#0f1b2d] dark:text-slate-100 dark:placeholder:text-slate-500'
 
 function Doctors() {
   const [doctors, setDoctors] = useLocalStorage(
@@ -55,7 +57,9 @@ function Doctors() {
   const passwordRequired = !editingDoctor || !editingAccountExists
 
   const specializations = [
-    ...new Set(doctors.map((doctor) => doctor.specialization).filter(Boolean)),
+    ...new Set(
+      doctors.map((doctor) => doctor.specialization).filter(Boolean)
+    ),
   ]
 
   function resetForm() {
@@ -221,14 +225,15 @@ function Doctors() {
   }
 
   return (
-    <div>
+    <div className="min-w-0 w-full">
       {/* Page Header */}
-      <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-        <div>
-          <h1 className="text-3xl font-bold text-slate-800">
+      <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
+        <div className="min-w-0">
+          <h1 className="text-2xl font-bold text-slate-800 dark:text-white sm:text-3xl">
             Doctors
           </h1>
-          <p className="mt-2 text-slate-500">
+
+          <p className="mt-2 text-sm text-slate-500 dark:text-slate-400 sm:text-base">
             {isReceptionist
               ? 'View hospital doctors and check their availability.'
               : 'Manage hospital doctors and their information.'}
@@ -238,7 +243,7 @@ function Doctors() {
         {isAdmin && (
           <button
             onClick={openAddForm}
-            className="flex items-center justify-center gap-2 rounded-lg bg-cyan-600 px-5 py-3 font-medium text-white hover:bg-cyan-700"
+            className="flex w-full shrink-0 cursor-pointer items-center justify-center gap-2 rounded-lg bg-cyan-600 px-5 py-3 font-medium text-white transition hover:bg-cyan-700 sm:w-auto"
           >
             <UserPlus size={20} />
             Add Doctor
@@ -247,8 +252,8 @@ function Doctors() {
       </div>
 
       {/* Search and Filter */}
-      <div className="mb-6 flex flex-col gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:flex-row">
-        <div className="relative w-full max-w-md">
+      <div className="mb-6 flex min-w-0 flex-col gap-3 rounded-xl border border-slate-200 bg-white p-3 shadow-sm transition-colors duration-300 dark:border-slate-700 dark:bg-[#172235] dark:shadow-none sm:flex-row sm:gap-4 sm:p-4">
+        <div className="relative w-full min-w-0 sm:max-w-md">
           <Search
             size={20}
             className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
@@ -256,17 +261,17 @@ function Doctors() {
 
           <input
             type="text"
-            placeholder="Search by doctor name or specialization..."
+            placeholder="Search doctor or specialization..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full rounded-lg border border-slate-200 py-3 pl-10 pr-4 outline-none focus:border-cyan-500"
+            className={`${inputClasses} pl-10 pr-4`}
           />
         </div>
 
         <select
           value={specializationFilter}
           onChange={(e) => setSpecializationFilter(e.target.value)}
-          className="w-full rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-cyan-500 sm:max-w-xs"
+          className={`${inputClasses} sm:max-w-xs`}
         >
           <option value="All">All Specializations</option>
 
@@ -279,61 +284,64 @@ function Doctors() {
       </div>
 
       {/* Doctors Table */}
-      <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
-        <table className="w-full min-w-[850px] text-left">
-          <thead className="bg-slate-50 text-sm text-slate-500">
+      <div className="w-full min-w-0 overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm transition-colors duration-300 dark:border-slate-700 dark:bg-[#172235] dark:shadow-none">
+        <table className="w-full min-w-[750px] text-left">
+          <thead className="bg-slate-50 text-sm text-slate-500 dark:bg-[#1d2b40] dark:text-slate-300">
             <tr>
-              <th className="px-6 py-4">Doctor Name</th>
-              <th className="px-6 py-4">Specialization</th>
-              <th className="px-6 py-4">Experience</th>
-              <th className="px-6 py-4">Phone</th>
-              <th className="px-6 py-4">Gender</th>
-              <th className="px-6 py-4">Availability</th>
-              <th className="px-6 py-4">Action</th>
+              <th className="px-4 py-4 sm:px-6">Doctor Name</th>
+              <th className="px-4 py-4 sm:px-6">Specialization</th>
+              <th className="px-4 py-4 sm:px-6">Experience</th>
+              <th className="px-4 py-4 sm:px-6">Phone</th>
+              <th className="px-4 py-4 sm:px-6">Gender</th>
+              <th className="px-4 py-4 sm:px-6">Availability</th>
+              <th className="px-4 py-4 sm:px-6">Action</th>
             </tr>
           </thead>
 
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
             {filteredDoctors.map((doctor) => (
-              <tr key={doctor.id} className="hover:bg-slate-50">
-                <td className="px-6 py-4 font-medium text-slate-800">
+              <tr
+                key={doctor.id}
+                className="transition hover:bg-slate-50 dark:hover:bg-[#1d2b40]"
+              >
+                <td className="px-4 py-4 font-medium text-slate-800 dark:text-slate-100 sm:px-6">
                   {doctor.name}
                 </td>
 
-                <td className="px-6 py-4 text-slate-600">
+                <td className="px-4 py-4 text-slate-600 dark:text-slate-300 sm:px-6">
                   {doctor.specialization}
                 </td>
 
-                <td className="px-6 py-4 text-slate-600">
+                <td className="px-4 py-4 text-slate-600 dark:text-slate-300 sm:px-6">
                   {doctor.experience} Years
                 </td>
 
-                <td className="px-6 py-4 text-slate-600">
+                <td className="px-4 py-4 text-slate-600 dark:text-slate-300 sm:px-6">
                   {doctor.phone}
                 </td>
 
-                <td className="px-6 py-4 text-slate-600">
+                <td className="px-4 py-4 text-slate-600 dark:text-slate-300 sm:px-6">
                   {doctor.gender}
                 </td>
 
-                <td className="px-6 py-4">
+                <td className="px-4 py-4 sm:px-6">
                   <span
-                    className={`rounded-full px-3 py-1 text-xs font-medium ${
+                    className={`whitespace-nowrap rounded-full px-3 py-1 text-xs font-medium ${
                       doctor.availability === 'Available'
-                        ? 'bg-green-100 text-green-700'
-                        : 'bg-red-100 text-red-700'
+                        ? 'bg-green-100 text-green-700 dark:bg-green-500/15 dark:text-green-400'
+                        : 'bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-400'
                     }`}
                   >
                     {doctor.availability}
                   </span>
                 </td>
 
-                <td className="px-6 py-4">
-                  <div className="flex items-center gap-2">
+                <td className="px-4 py-4 sm:px-6">
+                  <div className="flex items-center gap-1 sm:gap-2">
                     <button
                       title="View doctor"
                       onClick={() => setViewingDoctor(doctor)}
-                      className="rounded-lg p-2 text-cyan-600 hover:bg-cyan-50"
+                      className="cursor-pointer rounded-lg p-2 text-cyan-600 transition hover:bg-cyan-50 dark:text-cyan-400 dark:hover:bg-cyan-500/10"
                     >
                       <Eye size={19} />
                     </button>
@@ -343,7 +351,7 @@ function Doctors() {
                         <button
                           title="Edit doctor"
                           onClick={() => handleEdit(doctor)}
-                          className="rounded-lg p-2 text-blue-600 hover:bg-blue-50"
+                          className="cursor-pointer rounded-lg p-2 text-blue-600 transition hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-500/10"
                         >
                           <Pencil size={19} />
                         </button>
@@ -351,7 +359,7 @@ function Doctors() {
                         <button
                           title="Delete doctor"
                           onClick={() => handleDelete(doctor.id)}
-                          className="rounded-lg p-2 text-red-600 hover:bg-red-50"
+                          className="cursor-pointer rounded-lg p-2 text-red-600 transition hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-500/10"
                         >
                           <Trash2 size={19} />
                         </button>
@@ -366,7 +374,7 @@ function Doctors() {
               <tr>
                 <td
                   colSpan="7"
-                  className="px-6 py-8 text-center text-slate-500"
+                  className="px-6 py-8 text-center text-slate-500 dark:text-slate-400"
                 >
                   No doctors found.
                 </td>
@@ -376,22 +384,22 @@ function Doctors() {
         </table>
       </div>
 
-      <p className="mt-4 text-sm text-slate-500">
+      <p className="mt-4 text-sm text-slate-500 dark:text-slate-400">
         Showing {filteredDoctors.length} of {doctors.length} doctors
       </p>
 
-      {/* Add / Edit Doctor Modal - Admin Only */}
+      {/* Add / Edit Doctor Modal */}
       {isAdmin && showForm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-xl bg-white p-6 shadow-xl">
-            <div className="mb-6 flex items-center justify-between">
-              <h2 className="text-xl font-bold text-slate-800">
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/60 p-3 backdrop-blur-sm sm:p-4">
+          <div className="my-auto max-h-[94vh] w-full max-w-2xl overflow-y-auto rounded-xl border border-slate-200 bg-white p-4 shadow-xl dark:border-slate-700 dark:bg-[#172235] sm:p-6">
+            <div className="mb-5 flex items-center justify-between gap-3 sm:mb-6">
+              <h2 className="text-lg font-bold text-slate-800 dark:text-white sm:text-xl">
                 {editingDoctor ? 'Edit Doctor' : 'Add New Doctor'}
               </h2>
 
               <button
                 onClick={resetForm}
-                className="rounded-lg p-2 text-slate-500 hover:bg-slate-100"
+                className="shrink-0 cursor-pointer rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700"
               >
                 <X size={22} />
               </button>
@@ -405,7 +413,7 @@ function Doctors() {
                   onChange={handleChange}
                   placeholder="Doctor Name"
                   required
-                  className="rounded-lg border p-3 outline-none focus:border-cyan-500"
+                  className={inputClasses}
                 />
 
                 <input
@@ -414,7 +422,7 @@ function Doctors() {
                   onChange={handleChange}
                   placeholder="Specialization"
                   required
-                  className="rounded-lg border p-3 outline-none focus:border-cyan-500"
+                  className={inputClasses}
                 />
 
                 <input
@@ -426,7 +434,7 @@ function Doctors() {
                   onChange={handleChange}
                   placeholder="Experience (Years)"
                   required
-                  className="rounded-lg border p-3 outline-none focus:border-cyan-500"
+                  className={inputClasses}
                 />
 
                 <input
@@ -435,7 +443,7 @@ function Doctors() {
                   onChange={handleChange}
                   placeholder="Phone Number"
                   required
-                  className="rounded-lg border p-3 outline-none focus:border-cyan-500"
+                  className={inputClasses}
                 />
 
                 <input
@@ -445,10 +453,10 @@ function Doctors() {
                   onChange={handleChange}
                   placeholder="Email Address"
                   required
-                  className="rounded-lg border p-3 outline-none focus:border-cyan-500"
+                  className={inputClasses}
                 />
 
-                <div>
+                <div className="min-w-0">
                   <input
                     name="password"
                     type="password"
@@ -462,10 +470,10 @@ function Doctors() {
                     required={passwordRequired}
                     minLength={6}
                     autoComplete="new-password"
-                    className="w-full rounded-lg border p-3 outline-none focus:border-cyan-500"
+                    className={inputClasses}
                   />
 
-                  <p className="mt-1 text-xs text-slate-500">
+                  <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
                     {passwordRequired
                       ? 'Required to create the doctor login. Minimum 6 characters.'
                       : 'Leave empty to keep the current password.'}
@@ -476,7 +484,7 @@ function Doctors() {
                   name="gender"
                   value={formData.gender}
                   onChange={handleChange}
-                  className="rounded-lg border p-3 outline-none focus:border-cyan-500"
+                  className={inputClasses}
                 >
                   <option>Male</option>
                   <option>Female</option>
@@ -487,7 +495,7 @@ function Doctors() {
                   name="availability"
                   value={formData.availability}
                   onChange={handleChange}
-                  className="rounded-lg border p-3 outline-none focus:border-cyan-500 sm:col-span-2"
+                  className={`${inputClasses} sm:col-span-2`}
                 >
                   <option>Available</option>
                   <option>Unavailable</option>
@@ -495,27 +503,27 @@ function Doctors() {
               </div>
 
               {error && (
-                <p className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-600">
+                <p className="mt-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-600 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-400">
                   {error}
                 </p>
               )}
 
-              <p className="mt-4 text-xs text-slate-500">
+              <p className="mt-4 text-xs text-slate-500 dark:text-slate-400">
                 A login account will automatically be created for this doctor.
               </p>
 
-              <div className="mt-6 flex justify-end gap-3">
+              <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
                 <button
                   type="button"
                   onClick={resetForm}
-                  className="rounded-lg border px-5 py-3 text-slate-600 hover:bg-slate-50"
+                  className="w-full cursor-pointer rounded-lg border border-slate-200 px-5 py-3 text-slate-600 transition hover:bg-slate-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700 sm:w-auto"
                 >
                   Cancel
                 </button>
 
                 <button
                   type="submit"
-                  className="rounded-lg bg-cyan-600 px-5 py-3 font-medium text-white hover:bg-cyan-700"
+                  className="w-full cursor-pointer rounded-lg bg-cyan-600 px-5 py-3 font-medium text-white transition hover:bg-cyan-700 sm:w-auto"
                 >
                   {editingDoctor ? 'Update Doctor' : 'Save Doctor'}
                 </button>
@@ -525,18 +533,18 @@ function Doctors() {
         </div>
       )}
 
-      {/* View Doctor Modal - Both Roles */}
+      {/* View Doctor Modal */}
       {viewingDoctor && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="w-full max-w-lg rounded-xl bg-white p-6 shadow-xl">
-            <div className="mb-6 flex items-center justify-between">
-              <h2 className="text-xl font-bold text-slate-800">
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/60 p-3 backdrop-blur-sm sm:p-4">
+          <div className="my-auto w-full max-w-lg rounded-xl border border-slate-200 bg-white p-4 shadow-xl dark:border-slate-700 dark:bg-[#172235] sm:p-6">
+            <div className="mb-5 flex items-center justify-between gap-3 sm:mb-6">
+              <h2 className="text-lg font-bold text-slate-800 dark:text-white sm:text-xl">
                 Doctor Details
               </h2>
 
               <button
                 onClick={() => setViewingDoctor(null)}
-                className="rounded-lg p-2 text-slate-500 hover:bg-slate-100"
+                className="shrink-0 cursor-pointer rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700"
               >
                 <X size={22} />
               </button>
@@ -554,13 +562,13 @@ function Doctors() {
               ].map(([label, value]) => (
                 <div
                   key={label}
-                  className="flex justify-between gap-4 border-b border-slate-100 pb-3"
+                  className="flex flex-col justify-between gap-1 border-b border-slate-100 pb-3 dark:border-slate-700 sm:flex-row sm:gap-4"
                 >
-                  <span className="font-medium text-slate-500">
+                  <span className="font-medium text-slate-500 dark:text-slate-400">
                     {label}
                   </span>
 
-                  <span className="text-right text-slate-800">
+                  <span className="break-words text-left text-slate-800 dark:text-slate-100 sm:text-right">
                     {value}
                   </span>
                 </div>
@@ -570,7 +578,7 @@ function Doctors() {
             <div className="mt-6 flex justify-end">
               <button
                 onClick={() => setViewingDoctor(null)}
-                className="rounded-lg bg-cyan-600 px-5 py-2 text-white hover:bg-cyan-700"
+                className="w-full cursor-pointer rounded-lg bg-cyan-600 px-5 py-2 text-white transition hover:bg-cyan-700 sm:w-auto"
               >
                 Close
               </button>

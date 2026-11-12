@@ -43,79 +43,135 @@ function DashboardCharts({ appointments }) {
   const hasDepartmentData = departmentData.length > 0
   const hasStatusData = statusData.some((item) => item.value > 0)
 
+  const axisColor = '#94a3b8'
+  const gridColor = '#334155'
+
+  const tooltipStyle = {
+    backgroundColor: '#172235',
+    border: '1px solid #334155',
+    borderRadius: '10px',
+    color: '#f1f5f9',
+  }
+
   return (
-    <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+    <div className="grid min-w-0 grid-cols-1 gap-4 sm:gap-6 xl:grid-cols-2">
 
       {/* Appointments by Department */}
-      <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-        <h2 className="mb-6 text-lg font-bold text-slate-800">
+      <div className="min-w-0 overflow-hidden rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-colors duration-300 sm:p-6 dark:border-slate-700 dark:bg-[#172235] dark:shadow-none">
+
+        <h2 className="mb-4 text-base font-bold text-slate-800 sm:mb-6 sm:text-lg dark:text-white">
           Appointments by Department
         </h2>
 
         {hasDepartmentData ? (
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={departmentData}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} />
+          <div className="h-[260px] w-full min-w-0 sm:h-[300px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart
+                data={departmentData}
+                margin={{
+                  top: 10,
+                  right: 5,
+                  left: -20,
+                  bottom: 5,
+                }}
+              >
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  vertical={false}
+                  stroke={gridColor}
+                />
 
-              <XAxis
-                dataKey="name"
-                tick={{ fontSize: 12 }}
-              />
+                <XAxis
+                  dataKey="name"
+                  tick={{ fontSize: 11, fill: axisColor }}
+                  axisLine={{ stroke: gridColor }}
+                  tickLine={false}
+                  interval={0}
+                  angle={-20}
+                  textAnchor="end"
+                  height={55}
+                />
 
-              <YAxis allowDecimals={false} />
+                <YAxis
+                  allowDecimals={false}
+                  tick={{ fontSize: 11, fill: axisColor }}
+                  axisLine={false}
+                  tickLine={false}
+                  width={35}
+                />
 
-              <Tooltip />
+                <Tooltip
+                  contentStyle={tooltipStyle}
+                  cursor={{ fill: 'rgba(59, 130, 246, 0.08)' }}
+                />
 
-              <Bar
-                dataKey="total"
-                fill="#3b82f6"
-                radius={[6, 6, 0, 0]}
-              />
-            </BarChart>
-          </ResponsiveContainer>
+                <Bar
+                  dataKey="total"
+                  fill="#3b82f6"
+                  radius={[6, 6, 0, 0]}
+                  maxBarSize={55}
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
         ) : (
-          <p className="py-20 text-center text-slate-400">
+          <p className="py-16 text-center text-sm text-slate-400 dark:text-slate-500">
             No appointment data available.
           </p>
         )}
       </div>
 
       {/* Appointment Status */}
-      <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-        <h2 className="mb-6 text-lg font-bold text-slate-800">
+      <div className="min-w-0 overflow-hidden rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-colors duration-300 sm:p-6 dark:border-slate-700 dark:bg-[#172235] dark:shadow-none">
+
+        <h2 className="mb-4 text-base font-bold text-slate-800 sm:mb-6 sm:text-lg dark:text-white">
           Appointment Overview
         </h2>
 
         {hasStatusData ? (
-          <ResponsiveContainer width="100%" height={300}>
-            <PieChart>
-              <Pie
-                data={statusData.filter((item) => item.value > 0)}
-                dataKey="value"
-                nameKey="name"
-                cx="50%"
-                cy="50%"
-                outerRadius={100}
-                label
-              >
-                {statusData
-                  .filter((item) => item.value > 0)
-                  .map((item) => (
-                    <Cell
-                      key={item.name}
-                      fill={
-                        COLORS[statuses.indexOf(item.name)]
-                      }
-                    />
-                  ))}
-              </Pie>
+          <div className="h-[260px] w-full min-w-0 sm:h-[300px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={statusData.filter((item) => item.value > 0)}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="45%"
+                  outerRadius="65%"
+                  label={false}
+                >
+                  {statusData
+                    .filter((item) => item.value > 0)
+                    .map((item) => (
+                      <Cell
+                        key={item.name}
+                        fill={COLORS[statuses.indexOf(item.name)]}
+                        stroke="none"
+                      />
+                    ))}
+                </Pie>
 
-              <Tooltip />
-              <Legend />
-            </PieChart>
-          </ResponsiveContainer>
+                <Tooltip contentStyle={tooltipStyle} />
+
+                <Legend
+                  verticalAlign="bottom"
+                  align="center"
+                  wrapperStyle={{
+                    fontSize: '12px',
+                    paddingTop: '10px',
+                  }}
+                  formatter={(value) => (
+                    <span style={{ color: axisColor, fontSize: 12 }}>
+                      {value}
+                    </span>
+                  )}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
         ) : (
-          <p className="py-20 text-center text-slate-400">
+          <p className="py-16 text-center text-sm text-slate-400 dark:text-slate-500">
             No appointment data available.
           </p>
         )}

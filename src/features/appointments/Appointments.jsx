@@ -15,6 +15,12 @@ import doctorsData from '../../data/doctors'
 import useLocalStorage from '../../hooks/useLocalStorage'
 import { useAuth } from '../auth/AuthContext'
 
+const inputClasses =
+  'w-full min-w-0 rounded-lg border border-slate-200 bg-white p-3 text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-cyan-500 disabled:cursor-not-allowed disabled:bg-slate-100 dark:border-slate-600 dark:bg-[#0f1b2d] dark:text-slate-100 dark:placeholder:text-slate-500 dark:disabled:bg-slate-800'
+
+const modalClasses =
+  'rounded-xl border border-slate-200 bg-white p-4 shadow-xl dark:border-slate-700 dark:bg-[#172235] sm:p-6'
+
 function Appointments() {
   const { user } = useAuth()
 
@@ -68,9 +74,6 @@ function Appointments() {
     status: 'Pending',
   })
 
-  // Available doctors for new bookings.
-  // During editing, keep the currently assigned doctor selectable
-  // even if their availability has changed.
   const selectableDoctors = doctors.filter((doctor) => {
     const isCurrentlyAssigned =
       editingAppointment &&
@@ -123,7 +126,6 @@ function Appointments() {
     }))
   }
 
-  // Add or update appointment
   function handleSubmit(e) {
     e.preventDefault()
 
@@ -275,16 +277,32 @@ function Appointments() {
       appointment.department?.toLowerCase().includes(search.toLowerCase())
   )
 
+  function getStatusClasses(status) {
+    if (status === 'Confirmed') {
+      return 'bg-green-100 text-green-700 dark:bg-green-500/15 dark:text-green-400'
+    }
+
+    if (status === 'Completed') {
+      return 'bg-blue-100 text-blue-700 dark:bg-blue-500/15 dark:text-blue-400'
+    }
+
+    if (status === 'Cancelled') {
+      return 'bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-400'
+    }
+
+    return 'bg-orange-100 text-orange-700 dark:bg-orange-500/15 dark:text-orange-400'
+  }
+
   return (
-    <div>
+    <div className="w-full min-w-0 transition-colors duration-300">
       {/* Page Header */}
-      <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-        <div>
-          <h1 className="text-3xl font-bold text-slate-800">
+      <div className="mb-6 flex flex-col justify-between gap-4 sm:mb-8 sm:flex-row sm:items-center">
+        <div className="min-w-0">
+          <h1 className="text-2xl font-bold text-slate-800 dark:text-white sm:text-3xl">
             {isDoctor ? 'My Appointments' : 'Appointments'}
           </h1>
 
-          <p className="mt-2 text-slate-500">
+          <p className="mt-2 text-sm text-slate-500 dark:text-slate-400 sm:text-base">
             {isDoctor
               ? 'View and manage the status of your assigned appointments.'
               : 'Manage hospital appointments and schedules.'}
@@ -293,6 +311,7 @@ function Appointments() {
 
         {!isDoctor && (
           <button
+            type="button"
             onClick={() => {
               setEditingAppointment(null)
               setFormData({
@@ -307,7 +326,7 @@ function Appointments() {
               })
               setShowForm(true)
             }}
-            className="flex items-center justify-center gap-2 rounded-lg bg-cyan-600 px-5 py-3 font-medium text-white hover:bg-cyan-700"
+            className="flex w-full shrink-0 cursor-pointer items-center justify-center gap-2 rounded-lg bg-cyan-600 px-5 py-3 font-medium text-white transition hover:bg-cyan-700 sm:w-auto"
           >
             <Plus size={20} />
             Book Appointment
@@ -316,8 +335,8 @@ function Appointments() {
       </div>
 
       {/* Search */}
-      <div className="mb-6 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-        <div className="relative max-w-md">
+      <div className="mb-6 rounded-xl border border-slate-200 bg-white p-3 shadow-sm transition-colors dark:border-slate-700 dark:bg-[#172235] dark:shadow-none sm:p-4">
+        <div className="relative w-full min-w-0 sm:max-w-md">
           <Search
             size={20}
             className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
@@ -328,97 +347,96 @@ function Appointments() {
             placeholder="Search patient, doctor or department..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full rounded-lg border border-slate-200 py-3 pl-10 pr-4 outline-none focus:border-cyan-500"
+            className={`${inputClasses} pl-10 pr-4`}
           />
         </div>
       </div>
 
       {/* Appointments Table */}
-      <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
-        <table className="w-full min-w-[1000px] text-left">
-          <thead className="bg-slate-50 text-sm text-slate-500">
+      <div className="w-full min-w-0 overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm transition-colors dark:border-slate-700 dark:bg-[#172235] dark:shadow-none">
+        <table className="w-full min-w-[850px] text-left">
+          <thead className="bg-slate-50 text-sm text-slate-500 dark:bg-[#1d2b40] dark:text-slate-400">
             <tr>
-              <th className="px-6 py-4">Patient</th>
-              <th className="px-6 py-4">Doctor</th>
-              <th className="px-6 py-4">Department</th>
-              <th className="px-6 py-4">Date</th>
-              <th className="px-6 py-4">Time</th>
-              <th className="px-6 py-4">Status</th>
-              <th className="px-6 py-4">Action</th>
+              <th className="px-4 py-4 sm:px-6">Patient</th>
+              <th className="px-4 py-4 sm:px-6">Doctor</th>
+              <th className="px-4 py-4 sm:px-6">Department</th>
+              <th className="px-4 py-4 sm:px-6">Date</th>
+              <th className="px-4 py-4 sm:px-6">Time</th>
+              <th className="px-4 py-4 sm:px-6">Status</th>
+              <th className="px-4 py-4 sm:px-6">Action</th>
             </tr>
           </thead>
 
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
             {filteredAppointments.map((appointment) => (
-              <tr key={appointment.id} className="hover:bg-slate-50">
-                <td className="px-6 py-4 font-medium text-slate-800">
+              <tr
+                key={appointment.id}
+                className="transition hover:bg-slate-50 dark:hover:bg-[#1d2b40]"
+              >
+                <td className="px-4 py-4 font-medium text-slate-800 dark:text-slate-100 sm:px-6">
                   {appointment.patientName}
                 </td>
 
-                <td className="px-6 py-4 text-slate-600">
+                <td className="px-4 py-4 text-slate-600 dark:text-slate-300 sm:px-6">
                   {appointment.doctorName}
                 </td>
 
-                <td className="px-6 py-4 text-slate-600">
+                <td className="px-4 py-4 text-slate-600 dark:text-slate-300 sm:px-6">
                   {appointment.department}
                 </td>
 
-                <td className="px-6 py-4 text-slate-600">
+                <td className="px-4 py-4 text-slate-600 dark:text-slate-300 sm:px-6">
                   {appointment.date}
                 </td>
 
-                <td className="px-6 py-4 text-slate-600">
+                <td className="px-4 py-4 text-slate-600 dark:text-slate-300 sm:px-6">
                   {appointment.time}
                 </td>
 
-                <td className="px-6 py-4">
+                <td className="px-4 py-4 sm:px-6">
                   <span
-                    className={`rounded-full px-3 py-1 text-xs font-medium ${
-                      appointment.status === 'Confirmed'
-                        ? 'bg-green-100 text-green-700'
-                        : appointment.status === 'Completed'
-                          ? 'bg-blue-100 text-blue-700'
-                          : appointment.status === 'Cancelled'
-                            ? 'bg-red-100 text-red-700'
-                            : 'bg-orange-100 text-orange-700'
-                    }`}
+                    className={`whitespace-nowrap rounded-full px-3 py-1 text-xs font-medium ${getStatusClasses(appointment.status)}`}
                   >
                     {appointment.status}
                   </span>
                 </td>
 
-                <td className="px-6 py-4">
-                  <div className="flex items-center gap-2">
+                <td className="px-4 py-4 sm:px-6">
+                  <div className="flex items-center gap-1 sm:gap-2">
                     <button
+                      type="button"
                       title="View appointment"
                       onClick={() => setViewingAppointment(appointment)}
-                      className="rounded-lg p-2 text-cyan-600 hover:bg-cyan-50"
+                      className="cursor-pointer rounded-lg p-2 text-cyan-600 transition hover:bg-cyan-50 dark:hover:bg-cyan-500/10"
                     >
                       <Eye size={19} />
                     </button>
 
                     {isDoctor ? (
                       <button
+                        type="button"
                         title="Update appointment status"
                         onClick={() => handleDoctorStatusEdit(appointment)}
-                        className="rounded-lg p-2 text-blue-600 hover:bg-blue-50"
+                        className="cursor-pointer rounded-lg p-2 text-blue-600 transition hover:bg-blue-50 dark:hover:bg-blue-500/10"
                       >
                         <Pencil size={19} />
                       </button>
                     ) : (
                       <>
                         <button
+                          type="button"
                           title="Edit appointment"
                           onClick={() => handleEdit(appointment)}
-                          className="rounded-lg p-2 text-blue-600 hover:bg-blue-50"
+                          className="cursor-pointer rounded-lg p-2 text-blue-600 transition hover:bg-blue-50 dark:hover:bg-blue-500/10"
                         >
                           <Pencil size={19} />
                         </button>
 
                         <button
+                          type="button"
                           title="Delete appointment"
                           onClick={() => handleDelete(appointment.id)}
-                          className="rounded-lg p-2 text-red-600 hover:bg-red-50"
+                          className="cursor-pointer rounded-lg p-2 text-red-600 transition hover:bg-red-50 dark:hover:bg-red-500/10"
                         >
                           <Trash2 size={19} />
                         </button>
@@ -433,7 +451,7 @@ function Appointments() {
               <tr>
                 <td
                   colSpan="7"
-                  className="px-6 py-8 text-center text-slate-500"
+                  className="px-6 py-8 text-center text-slate-500 dark:text-slate-400"
                 >
                   {isDoctor
                     ? 'You have no appointments assigned yet.'
@@ -445,16 +463,16 @@ function Appointments() {
         </table>
       </div>
 
-      <p className="mt-4 text-sm text-slate-500">
+      <p className="mt-4 text-sm text-slate-500 dark:text-slate-400">
         Showing {filteredAppointments.length} of {visibleAppointments.length} appointments
       </p>
 
       {/* Add / Edit Appointment Modal */}
       {showForm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-xl bg-white p-6 shadow-xl">
-            <div className="mb-6 flex items-center justify-between">
-              <h2 className="text-xl font-bold text-slate-800">
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/60 p-3 backdrop-blur-sm sm:p-4">
+          <div className={`my-auto max-h-[94dvh] w-full max-w-2xl overflow-y-auto ${modalClasses}`}>
+            <div className="mb-5 flex items-center justify-between gap-3 sm:mb-6">
+              <h2 className="text-lg font-bold text-slate-800 dark:text-white sm:text-xl">
                 {isDoctor
                   ? 'Update Appointment Status'
                   : editingAppointment
@@ -463,8 +481,9 @@ function Appointments() {
               </h2>
 
               <button
+                type="button"
                 onClick={resetForm}
-                className="rounded-lg p-2 text-slate-500 hover:bg-slate-100"
+                className="shrink-0 cursor-pointer rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700"
               >
                 <X size={22} />
               </button>
@@ -478,7 +497,7 @@ function Appointments() {
                   onChange={handleChange}
                   required
                   disabled={isDoctor || Boolean(editingAppointment)}
-                  className="rounded-lg border p-3 outline-none focus:border-cyan-500 disabled:bg-slate-100"
+                  className={inputClasses}
                 >
                   <option value="">Select Patient</option>
 
@@ -495,7 +514,7 @@ function Appointments() {
                   onChange={handleChange}
                   required
                   disabled={isDoctor}
-                  className="rounded-lg border p-3 outline-none focus:border-cyan-500 disabled:bg-slate-100"
+                  className={inputClasses}
                 >
                   <option value="">Select Doctor</option>
 
@@ -516,7 +535,7 @@ function Appointments() {
                   placeholder="Department"
                   required
                   readOnly
-                  className="rounded-lg border bg-slate-50 p-3 outline-none focus:border-cyan-500"
+                  className={`${inputClasses} bg-slate-50 dark:bg-[#0f1b2d]`}
                 />
 
                 <input
@@ -526,7 +545,7 @@ function Appointments() {
                   onChange={handleChange}
                   required
                   disabled={isDoctor}
-                  className="rounded-lg border p-3 outline-none focus:border-cyan-500 disabled:bg-slate-100"
+                  className={inputClasses}
                 />
 
                 <input
@@ -536,14 +555,14 @@ function Appointments() {
                   onChange={handleChange}
                   required
                   disabled={isDoctor}
-                  className="rounded-lg border p-3 outline-none focus:border-cyan-500 disabled:bg-slate-100"
+                  className={inputClasses}
                 />
 
                 <select
                   name="status"
                   value={formData.status}
                   onChange={handleChange}
-                  className="rounded-lg border p-3 outline-none focus:border-cyan-500"
+                  className={inputClasses}
                 >
                   <option>Pending</option>
                   <option>Confirmed</option>
@@ -558,22 +577,22 @@ function Appointments() {
                   placeholder="Appointment Reason"
                   rows="3"
                   disabled={isDoctor}
-                  className="rounded-lg border p-3 outline-none focus:border-cyan-500 disabled:bg-slate-100 sm:col-span-2"
+                  className={`${inputClasses} sm:col-span-2`}
                 />
               </div>
 
-              <div className="mt-6 flex justify-end gap-3">
+              <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
                 <button
                   type="button"
                   onClick={resetForm}
-                  className="rounded-lg border px-5 py-3 text-slate-600 hover:bg-slate-50"
+                  className="w-full cursor-pointer rounded-lg border border-slate-200 px-5 py-3 text-slate-600 transition hover:bg-slate-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700 sm:w-auto"
                 >
                   Cancel
                 </button>
 
                 <button
                   type="submit"
-                  className="rounded-lg bg-cyan-600 px-5 py-3 font-medium text-white hover:bg-cyan-700"
+                  className="w-full cursor-pointer rounded-lg bg-cyan-600 px-5 py-3 font-medium text-white transition hover:bg-cyan-700 sm:w-auto"
                 >
                   {isDoctor
                     ? 'Update Status'
@@ -589,16 +608,17 @@ function Appointments() {
 
       {/* View Appointment Modal */}
       {viewingAppointment && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="w-full max-w-lg rounded-xl bg-white p-6 shadow-xl">
-            <div className="mb-6 flex items-center justify-between">
-              <h2 className="text-xl font-bold text-slate-800">
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/60 p-3 backdrop-blur-sm sm:p-4">
+          <div className={`my-auto w-full max-w-lg ${modalClasses}`}>
+            <div className="mb-5 flex items-center justify-between gap-3 sm:mb-6">
+              <h2 className="text-lg font-bold text-slate-800 dark:text-white sm:text-xl">
                 Appointment Details
               </h2>
 
               <button
+                type="button"
                 onClick={() => setViewingAppointment(null)}
-                className="rounded-lg p-2 text-slate-500 hover:bg-slate-100"
+                className="shrink-0 cursor-pointer rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700"
               >
                 <X size={22} />
               </button>
@@ -616,13 +636,13 @@ function Appointments() {
               ].map(([label, value]) => (
                 <div
                   key={label}
-                  className="flex justify-between gap-4 border-b border-slate-100 pb-3"
+                  className="flex flex-col justify-between gap-1 border-b border-slate-100 pb-3 dark:border-slate-700 sm:flex-row sm:gap-4"
                 >
-                  <span className="font-medium text-slate-500">
+                  <span className="font-medium text-slate-500 dark:text-slate-400">
                     {label}
                   </span>
 
-                  <span className="text-right text-slate-800">
+                  <span className="break-words text-left text-slate-800 dark:text-slate-100 sm:text-right">
                     {value}
                   </span>
                 </div>
@@ -631,8 +651,9 @@ function Appointments() {
 
             <div className="mt-6 flex justify-end">
               <button
+                type="button"
                 onClick={() => setViewingAppointment(null)}
-                className="rounded-lg bg-cyan-600 px-5 py-2 text-white hover:bg-cyan-700"
+                className="w-full cursor-pointer rounded-lg bg-cyan-600 px-5 py-2 text-white transition hover:bg-cyan-700 sm:w-auto"
               >
                 Close
               </button>

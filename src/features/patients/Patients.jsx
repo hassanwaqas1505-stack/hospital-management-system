@@ -15,6 +15,9 @@ import doctorsData from '../../data/doctors'
 import appointmentsData from '../../data/appointments'
 import { useAuth } from '../auth/AuthContext'
 
+const inputClasses =
+  'w-full min-w-0 rounded-lg border border-slate-200 bg-white p-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-cyan-500 dark:border-slate-600 dark:bg-[#0f1b2d] dark:text-slate-100 dark:placeholder:text-slate-500 sm:text-base'
+
 function Patients() {
   const { user } = useAuth()
 
@@ -41,8 +44,7 @@ function Patients() {
   const isDoctor = user?.role === 'Doctor'
 
   const currentDoctor = doctors.find(
-    (doctor) =>
-      String(doctor.id) === String(user?.doctorId)
+    (doctor) => String(doctor.id) === String(user?.doctorId)
   )
 
   const doctorName = currentDoctor?.name || user?.name
@@ -116,9 +118,7 @@ function Patients() {
 
     if (confirmDelete) {
       setPatients((previousPatients) =>
-        previousPatients.filter(
-          (patient) => patient.id !== id
-        )
+        previousPatients.filter((patient) => patient.id !== id)
       )
     }
   }
@@ -189,15 +189,16 @@ function Patients() {
   }
 
   return (
-    <div>
+    <div className="min-w-0 space-y-6">
+
       {/* Page Header */}
-      <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-        <div>
-          <h1 className="text-3xl font-bold text-slate-800">
+      <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
+        <div className="min-w-0">
+          <h1 className="break-words text-2xl font-bold text-slate-800 sm:text-3xl dark:text-white">
             {isDoctor ? 'My Patients' : 'Patients'}
           </h1>
 
-          <p className="mt-2 text-slate-500">
+          <p className="mt-2 text-sm text-slate-500 sm:text-base dark:text-slate-400">
             {isDoctor
               ? 'View your assigned patients and their information.'
               : 'Manage hospital patients and their information.'}
@@ -206,6 +207,7 @@ function Patients() {
 
         {!isDoctor && (
           <button
+            type="button"
             onClick={() => {
               setEditingPatient(null)
               setFormData({
@@ -220,7 +222,7 @@ function Patients() {
               })
               setShowForm(true)
             }}
-            className="flex items-center justify-center gap-2 rounded-lg bg-cyan-600 px-5 py-3 font-medium text-white hover:bg-cyan-700"
+            className="flex w-full shrink-0 cursor-pointer items-center justify-center gap-2 rounded-lg bg-cyan-600 px-5 py-3 font-medium text-white transition hover:bg-cyan-700 sm:w-auto"
           >
             <UserPlus size={20} />
             Add Patient
@@ -229,8 +231,8 @@ function Patients() {
       </div>
 
       {/* Search */}
-      <div className="mb-6 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-        <div className="relative max-w-md">
+      <div className="mb-6 rounded-xl border border-slate-200 bg-white p-3 shadow-sm transition-colors duration-300 sm:p-4 dark:border-slate-700 dark:bg-[#172235] dark:shadow-none">
+        <div className="relative w-full sm:max-w-md">
           <Search
             size={20}
             className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
@@ -241,141 +243,152 @@ function Patients() {
             placeholder="Search by patient name or phone..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full rounded-lg border border-slate-200 py-3 pl-10 pr-4 outline-none focus:border-cyan-500"
+            className={`${inputClasses} pl-10 pr-4`}
           />
         </div>
       </div>
 
       {/* Patients Table */}
-      <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
-        <table className="w-full min-w-[750px] text-left">
-          <thead className="bg-slate-50 text-sm text-slate-500">
-            <tr>
-              <th className="px-6 py-4">Patient Name</th>
-              <th className="px-6 py-4">Age</th>
-              <th className="px-6 py-4">Gender</th>
-              <th className="px-6 py-4">Phone</th>
-              <th className="px-6 py-4">Blood Group</th>
-              <th className="px-6 py-4">Status</th>
-              <th className="px-6 py-4">Action</th>
-            </tr>
-          </thead>
-
-          <tbody className="divide-y divide-slate-100">
-            {filteredPatients.map((patient) => (
-              <tr key={patient.id} className="hover:bg-slate-50">
-                <td className="px-6 py-4 font-medium text-slate-800">
-                  {patient.name}
-                </td>
-
-                <td className="px-6 py-4 text-slate-600">
-                  {patient.age}
-                </td>
-
-                <td className="px-6 py-4 text-slate-600">
-                  {patient.gender}
-                </td>
-
-                <td className="px-6 py-4 text-slate-600">
-                  {patient.phone}
-                </td>
-
-                <td className="px-6 py-4 text-slate-600">
-                  {patient.bloodGroup}
-                </td>
-
-                <td className="px-6 py-4">
-                  <span
-                    className={`rounded-full px-3 py-1 text-xs font-medium ${
-                      patient.status === 'Active'
-                        ? 'bg-green-100 text-green-700'
-                        : 'bg-red-100 text-red-700'
-                    }`}
-                  >
-                    {patient.status || 'Active'}
-                  </span>
-                </td>
-
-                <td className="px-6 py-4">
-                  <div className="flex items-center gap-2">
-                    <button
-                      title="View patient"
-                      onClick={() => setViewingPatient(patient)}
-                      className="rounded-lg p-2 text-cyan-600 hover:bg-cyan-50"
-                    >
-                      <Eye size={19} />
-                    </button>
-
-                    {!isDoctor && (
-                      <>
-                        <button
-                          title="Edit patient"
-                          onClick={() => handleEdit(patient)}
-                          className="rounded-lg p-2 text-blue-600 hover:bg-blue-50"
-                        >
-                          <Pencil size={19} />
-                        </button>
-
-                        <button
-                          title="Delete patient"
-                          onClick={() => handleDelete(patient.id)}
-                          className="rounded-lg p-2 text-red-600 hover:bg-red-50"
-                        >
-                          <Trash2 size={19} />
-                        </button>
-                      </>
-                    )}
-                  </div>
-                </td>
-              </tr>
-            ))}
-
-            {filteredPatients.length === 0 && (
+      <div className="min-w-0 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-colors duration-300 dark:border-slate-700 dark:bg-[#172235] dark:shadow-none">
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[750px] text-left">
+            <thead className="bg-slate-50 text-sm text-slate-500 dark:bg-[#1d2b40] dark:text-slate-300">
               <tr>
-                <td
-                  colSpan="7"
-                  className="px-6 py-8 text-center text-slate-500"
-                >
-                  {isDoctor
-                    ? 'No patients are assigned to you yet.'
-                    : 'No patients found.'}
-                </td>
+                <th className="px-3 py-4 sm:px-6">Patient Name</th>
+                <th className="px-3 py-4 sm:px-6">Age</th>
+                <th className="px-3 py-4 sm:px-6">Gender</th>
+                <th className="px-3 py-4 sm:px-6">Phone</th>
+                <th className="px-3 py-4 sm:px-6">Blood Group</th>
+                <th className="px-3 py-4 sm:px-6">Status</th>
+                <th className="px-3 py-4 sm:px-6">Action</th>
               </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
+              {filteredPatients.map((patient) => (
+                <tr
+                  key={patient.id}
+                  className="transition hover:bg-slate-50 dark:hover:bg-[#1d2b40]"
+                >
+                  <td className="px-3 py-4 font-medium text-slate-800 sm:px-6 dark:text-slate-100">
+                    {patient.name}
+                  </td>
+
+                  <td className="px-3 py-4 text-slate-600 sm:px-6 dark:text-slate-300">
+                    {patient.age}
+                  </td>
+
+                  <td className="px-3 py-4 text-slate-600 sm:px-6 dark:text-slate-300">
+                    {patient.gender}
+                  </td>
+
+                  <td className="px-3 py-4 text-slate-600 sm:px-6 dark:text-slate-300">
+                    {patient.phone}
+                  </td>
+
+                  <td className="px-3 py-4 text-slate-600 sm:px-6 dark:text-slate-300">
+                    {patient.bloodGroup}
+                  </td>
+
+                  <td className="px-3 py-4 sm:px-6">
+                    <span
+                      className={`whitespace-nowrap rounded-full px-3 py-1 text-xs font-medium ${
+                        patient.status === 'Active'
+                          ? 'bg-green-100 text-green-700 dark:bg-green-500/15 dark:text-green-400'
+                          : 'bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-400'
+                      }`}
+                    >
+                      {patient.status || 'Active'}
+                    </span>
+                  </td>
+
+                  <td className="px-3 py-4 sm:px-6">
+                    <div className="flex items-center gap-1 sm:gap-2">
+                      <button
+                        type="button"
+                        title="View patient"
+                        onClick={() => setViewingPatient(patient)}
+                        className="cursor-pointer rounded-lg p-2 text-cyan-600 transition hover:bg-cyan-50 dark:text-cyan-400 dark:hover:bg-cyan-500/10"
+                      >
+                        <Eye size={19} />
+                      </button>
+
+                      {!isDoctor && (
+                        <>
+                          <button
+                            type="button"
+                            title="Edit patient"
+                            onClick={() => handleEdit(patient)}
+                            className="cursor-pointer rounded-lg p-2 text-blue-600 transition hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-500/10"
+                          >
+                            <Pencil size={19} />
+                          </button>
+
+                          <button
+                            type="button"
+                            title="Delete patient"
+                            onClick={() => handleDelete(patient.id)}
+                            className="cursor-pointer rounded-lg p-2 text-red-600 transition hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-500/10"
+                          >
+                            <Trash2 size={19} />
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+
+              {filteredPatients.length === 0 && (
+                <tr>
+                  <td
+                    colSpan="7"
+                    className="px-6 py-8 text-center text-slate-500 dark:text-slate-400"
+                  >
+                    {isDoctor
+                      ? 'No patients are assigned to you yet.'
+                      : 'No patients found.'}
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
-      <p className="mt-4 text-sm text-slate-500">
+      <p className="text-sm text-slate-500 dark:text-slate-400">
         Showing {filteredPatients.length} of {visiblePatients.length} patients
       </p>
 
       {/* Add / Edit Patient Modal */}
       {showForm && !isDoctor && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-xl bg-white p-6 shadow-xl">
-            <div className="mb-6 flex items-center justify-between">
-              <h2 className="text-xl font-bold text-slate-800">
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/60 p-3 backdrop-blur-sm sm:p-4">
+          <div className="my-auto max-h-[94dvh] w-full max-w-2xl overflow-y-auto rounded-xl border border-slate-200 bg-white p-4 shadow-xl sm:p-6 dark:border-slate-700 dark:bg-[#172235]">
+
+            <div className="mb-5 flex items-center justify-between gap-3 sm:mb-6">
+              <h2 className="text-lg font-bold text-slate-800 sm:text-xl dark:text-white">
                 {editingPatient ? 'Edit Patient' : 'Add New Patient'}
               </h2>
 
               <button
+                type="button"
                 onClick={resetForm}
-                className="rounded-lg p-2 text-slate-500 hover:bg-slate-100"
+                aria-label="Close form"
+                className="shrink-0 cursor-pointer rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700"
               >
                 <X size={22} />
               </button>
             </div>
 
             <form onSubmit={handleSubmit}>
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
                 <input
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
                   placeholder="Patient Name"
                   required
-                  className="rounded-lg border p-3 outline-none focus:border-cyan-500"
+                  className={inputClasses}
                 />
 
                 <input
@@ -387,14 +400,14 @@ function Patients() {
                   onChange={handleChange}
                   placeholder="Age"
                   required
-                  className="rounded-lg border p-3 outline-none focus:border-cyan-500"
+                  className={inputClasses}
                 />
 
                 <select
                   name="gender"
                   value={formData.gender}
                   onChange={handleChange}
-                  className="rounded-lg border p-3 outline-none focus:border-cyan-500"
+                  className={inputClasses}
                 >
                   <option>Male</option>
                   <option>Female</option>
@@ -407,7 +420,7 @@ function Patients() {
                   onChange={handleChange}
                   placeholder="Phone Number"
                   required
-                  className="rounded-lg border p-3 outline-none focus:border-cyan-500"
+                  className={inputClasses}
                 />
 
                 <input
@@ -416,14 +429,14 @@ function Patients() {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="Email Address"
-                  className="rounded-lg border p-3 outline-none focus:border-cyan-500"
+                  className={inputClasses}
                 />
 
                 <select
                   name="bloodGroup"
                   value={formData.bloodGroup}
                   onChange={handleChange}
-                  className="rounded-lg border p-3 outline-none focus:border-cyan-500"
+                  className={inputClasses}
                 >
                   {[
                     'A+', 'A-', 'B+', 'B-',
@@ -437,7 +450,7 @@ function Patients() {
                   name="status"
                   value={formData.status}
                   onChange={handleChange}
-                  className="rounded-lg border p-3 outline-none focus:border-cyan-500 sm:col-span-2"
+                  className={`${inputClasses} sm:col-span-2`}
                 >
                   <option value="Active">Active</option>
                   <option value="Inactive">Inactive</option>
@@ -448,22 +461,22 @@ function Patients() {
                   value={formData.address}
                   onChange={handleChange}
                   placeholder="Address"
-                  className="rounded-lg border p-3 outline-none focus:border-cyan-500 sm:col-span-2"
+                  className={`${inputClasses} sm:col-span-2`}
                 />
               </div>
 
-              <div className="mt-6 flex justify-end gap-3">
+              <div className="mt-5 flex flex-col-reverse gap-3 sm:mt-6 sm:flex-row sm:justify-end">
                 <button
                   type="button"
                   onClick={resetForm}
-                  className="rounded-lg border px-5 py-3 text-slate-600 hover:bg-slate-50"
+                  className="w-full cursor-pointer rounded-lg border border-slate-200 px-5 py-3 text-slate-600 transition hover:bg-slate-50 sm:w-auto dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700"
                 >
                   Cancel
                 </button>
 
                 <button
                   type="submit"
-                  className="rounded-lg bg-cyan-600 px-5 py-3 font-medium text-white hover:bg-cyan-700"
+                  className="w-full cursor-pointer rounded-lg bg-cyan-600 px-5 py-3 font-medium text-white transition hover:bg-cyan-700 sm:w-auto"
                 >
                   {editingPatient ? 'Update Patient' : 'Save Patient'}
                 </button>
@@ -475,22 +488,25 @@ function Patients() {
 
       {/* View Patient Modal */}
       {viewingPatient && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="w-full max-w-lg rounded-xl bg-white p-6 shadow-xl">
-            <div className="mb-6 flex items-center justify-between">
-              <h2 className="text-xl font-bold text-slate-800">
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/60 p-3 backdrop-blur-sm sm:p-4">
+          <div className="my-auto w-full max-w-lg rounded-xl border border-slate-200 bg-white p-4 shadow-xl sm:p-6 dark:border-slate-700 dark:bg-[#172235]">
+
+            <div className="mb-5 flex items-center justify-between gap-3 sm:mb-6">
+              <h2 className="text-lg font-bold text-slate-800 sm:text-xl dark:text-white">
                 Patient Details
               </h2>
 
               <button
+                type="button"
                 onClick={() => setViewingPatient(null)}
-                className="rounded-lg p-2 text-slate-500 hover:bg-slate-100"
+                aria-label="Close patient details"
+                className="shrink-0 cursor-pointer rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700"
               >
                 <X size={22} />
               </button>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               {[
                 ['Patient Name', viewingPatient.name],
                 ['Age', viewingPatient.age],
@@ -503,23 +519,24 @@ function Patients() {
               ].map(([label, value]) => (
                 <div
                   key={label}
-                  className="flex justify-between gap-4 border-b border-slate-100 pb-3"
+                  className="flex flex-col justify-between gap-1 border-b border-slate-100 pb-3 sm:flex-row sm:gap-4 dark:border-slate-700"
                 >
-                  <span className="font-medium text-slate-500">
+                  <span className="text-sm font-medium text-slate-500 dark:text-slate-400">
                     {label}
                   </span>
 
-                  <span className="text-right text-slate-800">
+                  <span className="break-words text-sm text-slate-800 sm:text-right dark:text-slate-100">
                     {value}
                   </span>
                 </div>
               ))}
             </div>
 
-            <div className="mt-6 flex justify-end">
+            <div className="mt-5 flex justify-end sm:mt-6">
               <button
+                type="button"
                 onClick={() => setViewingPatient(null)}
-                className="rounded-lg bg-cyan-600 px-5 py-2 text-white hover:bg-cyan-700"
+                className="w-full cursor-pointer rounded-lg bg-cyan-600 px-5 py-2 text-white transition hover:bg-cyan-700 sm:w-auto"
               >
                 Close
               </button>
